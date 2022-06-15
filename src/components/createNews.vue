@@ -14,7 +14,7 @@
             </v-toolbar>
             <v-container fluid>
                 <v-form ref="form" v-model="valid" lazy-validation>
-                    <v-row align="center" dense>
+                    <v-row align="center" no-gutters dense>
                         <v-col cols="12" md="3" sm="3">
                             <datePicker :dateValue.sync="contentDetails.date" dateLabel="Date" />
                         </v-col>
@@ -35,6 +35,15 @@
                                 outlined
                                 dense
                             ></v-textarea>
+                        </v-col>
+                        <v-col cols="12" md="12">
+                            <v-text-field
+                                v-model="contentDetails.link"
+                                label="Link"
+                                :rules="[v => !!v || 'Link is required']"
+                                outlined
+                                dense
+                            ></v-text-field>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -60,14 +69,40 @@ export default {
             contentDetails: {
                 title: null,
                 content: null,
-                date: this.moment().format('YYYY-MM-DD')
-            }
+                date: this.moment().format('YYYY-MM-DD'),
+                link: null,
+                liked: false
+            },
+            config: {
+                position: 'bottom-right',
+                timeout: 3000,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                icon: true
+            },
         }
     },
     methods: {
         functionSaveNews() {
-            this.funcGetContents(this.contentDetails)
-            this.clearVariables()
+            if (this.$refs.form.validate()) {
+                this.Swal.fire({
+                    title: 'Are you sure',
+                    text: 'Save changes? ',
+                    icon: 'question',
+                    showCancelButton: true,
+                    showDenyButton: false,
+                    confirmButtonColor: '#1976d2',
+                    confirmButtonText: 'Save',
+                }).then(result => {
+                    if(result.isConfirmed) {
+                        this.funcGetContents(this.contentDetails)
+                        this.clearVariables()
+                        this.$toast.success('Save successfuly', this.config)
+                    }
+                })
+            }
         },
         clearVariables() {
             this.contentDetails = {

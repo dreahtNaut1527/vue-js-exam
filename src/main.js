@@ -7,10 +7,14 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
+import Swal from 'sweetalert2'
+
+import 'vue-toastification/dist/index.css'
 
 Vue.config.productionTip = false
 
 Vue.prototype.moment = moment
+Vue.prototype.Swal = Swal
 
 Vue.use(VModal)
 Vue.use(VToast, {transition: 'Vue-Toastification__bounce', maxToasts: 20, newestOnTop: true})
